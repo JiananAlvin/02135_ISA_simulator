@@ -311,6 +311,168 @@ print('\n---Start of simulation---')
 
 #####################################
 ##      Write your code here      ##
+## Arithmetic and logic instructions
+def addition(r1, r2, r3):
+    a = registerFile.read_register(r2)
+    b = registerFile.read_register(r3)
+    c = a + b
+    registerFile.write_register(r1, c)
+    global program_counter
+    program_counter += 1
+
+
+def subtraction(r1, r2, r3):
+    a = registerFile.read_register(r2)
+    b = registerFile.read_register(r3)
+    c = a - b
+    registerFile.write_register(r1, c)
+    global program_counter
+    program_counter += 1
+
+
+def bitwise_or(r1, r2, r3):
+    a = registerFile.read_register(r2)
+    b = registerFile.read_register(r3)
+    c = a | b
+    registerFile.write_register(r1, c)
+    global program_counter
+    program_counter += 1
+
+
+def bitwise_and(r1, r2, r3):
+    a = registerFile.read_register(r2)
+    b = registerFile.read_register(r3)
+    c = a & b
+    registerFile.write_register(r1, c)
+    global program_counter
+    program_counter += 1
+
+
+def bitwise_not(r1, r2):
+    a = registerFile.read_register(r2)
+    c = ~a
+    registerFile.write_register(r1, c)
+    global program_counter
+    program_counter += 1
+
+
+## Data transfer instructions
+def load_immediate(r1, c):
+    registerFile.write_register(r1, int(c))
+    global program_counter
+    program_counter += 1
+
+
+def load_data(r1, r2):
+    address = registerFile.read_register(r2)
+    c = dataMemory.read_data(address)
+    registerFile.write_register(r1, c)
+    global program_counter
+    program_counter += 1
+
+
+def store_data(r1, r2):
+    address = registerFile.read_register(r2)
+    c = registerFile.read_register(r1)
+    dataMemory.write_data(address, c)
+    global program_counter
+    program_counter += 1
+
+
+## Control and flow instructions
+def jump(r1):
+    address = registerFile.read_register(r1)
+    global program_counter
+    program_counter = address
+
+
+def jump_if_equal(r1, r2, r3):
+    address = registerFile.read_register(r1)
+    a = registerFile.read_register(r2)
+    b = registerFile.read_register(r3)
+    global program_counter
+    if a == b:
+        program_counter = address
+    else:
+        program_counter += 1
+
+
+def jump_if_less(r1, r2, r3):
+    address = registerFile.read_register(r1)
+    a = registerFile.read_register(r2)
+    b = registerFile.read_register(r3)
+    global program_counter
+    if a < b:
+        program_counter = address
+    else:
+        program_counter += 1
+
+
+def nop():
+    global program_counter
+    program_counter += 1
+
+
+def end():
+    global current_cycle
+    current_cycle = max_cycles
+
+
+operations = {"ADD": addition,
+              "SUB": subtraction,
+              "OR": bitwise_or,
+              "AND": bitwise_and,
+              "NOT": bitwise_not,
+              "LI": load_immediate,
+              "LD": load_data,
+              "SD": store_data,
+              "JR": jump,
+              "JEQ": jump_if_equal,
+              "JLT": jump_if_less,
+              "NOP": nop,
+              "END": end}
+
+while current_cycle < max_cycles:
+    print("------------------------------------------------")
+    print("Current cycle: {0}".format(current_cycle))
+    print("Program counter: {0}".format(program_counter))
+    print("Executing: ", end='')
+    instructionMemory.print_instruction(program_counter)
+    print("The content of the data memory in current cycle: ", end='')
+    dataMemory.print_data(program_counter)
+    print("The content of the registers in current cycle: ")
+
+    opcode = instructionMemory.read_opcode(program_counter)
+    operand_1 = instructionMemory.read_operand_1(program_counter)
+    operand_2 = instructionMemory.read_operand_2(program_counter)
+    operand_3 = instructionMemory.read_operand_3(program_counter)
+    if operand_1 == '-':
+        print("None")
+        operations[opcode]()
+    elif operand_2 == '-':
+        operations[opcode](operand_1)
+        registerFile.print_register(operand_1)
+    elif operand_3 == '-':
+        operations[opcode](operand_1, operand_2)
+        registerFile.print_register(operand_1)
+        try:
+            int(operand_2)
+        except:
+            registerFile.print_register(operand_2)
+    else:
+        operations[opcode](operand_1, operand_2, operand_3)
+        registerFile.print_register(operand_1)
+        registerFile.print_register(operand_2)
+        registerFile.print_register(operand_3)
+
+    current_cycle += 1
+    print("------------------------------------------------")
+
+print("************************************************")
+registerFile.print_all()
+print("************************************************")
+dataMemory.print_used()
+print("------------------------------------------------")
 ####################################
 
 print('\n---End of simulation---\n')
