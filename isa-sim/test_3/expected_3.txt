@@ -3,13 +3,13 @@ R0 = 0
 R1 = 19
 R2 = 20
 R3 = 1
-R4 = 1
-R5 = 8
-R6 = 9
+R4 = 9
+R5 = 1
+R6 = 0
 R7 = 20
-R8 = 17
+R8 = 29
 R9 = 20
-R10 = 26
+R10 = 10
 R11 = 0
 R12 = 0
 R13 = 0
@@ -39,4 +39,4 @@ Address 18 = 8
 Address 19 = 9
 
 
-Executes in 752 cycles for the provided array.
+Executes in 436 cycles for the provided array.

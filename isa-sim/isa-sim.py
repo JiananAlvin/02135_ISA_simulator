@@ -1,7 +1,7 @@
 import sys
 import re
 
-print("\nWelcome to the ISA simulator! - Designed by <YOUR NAMES HERE>")
+print("\nWelcome to the ISA simulator! - Designed by <Group8-Jianan, Rune, Simona>")
 
 if len(sys.argv) < 4:
     print('Too few arguments.')
